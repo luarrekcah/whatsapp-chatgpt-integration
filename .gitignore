@@ -1,0 +1,5 @@
+node_modules
+tokens
+.env
+db.json
+teste.js
