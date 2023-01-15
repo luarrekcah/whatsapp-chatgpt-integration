@@ -24,7 +24,10 @@ function start(client) {
   client.onMessage(async (message) => {
     //message.body
     if (message.isGroupMsg === false && message.body !== undefined) {
+      if(message.type !== 'chat') return;
+      if(message.body.length > 1000 || message.body.length <= 5) return;
       const number = db.find((n) => n.number === message.from);
+      console.log(message);
       if (!number) {
         client.sendText(
           message.from,
@@ -61,14 +64,15 @@ function start(client) {
       fs.writeFileSync(`${__dirname}/db.json`, toStringData);
 
       client
-        .sendText(
+        .reply(
           message.from,
           completion.data.choices[0].text
             .replace("\n", "")
             .replace("\n", "")
-            .replace("robot", "")
-            .replace("robô", "")
-            .replace("bot", "")
+            .replace("Robot:", "")
+            .replace("Robô:", "")
+            .replace("Bot:", ""),
+            message.id
         )
         .then((result) => {
           //console.log("Result: ", result);
