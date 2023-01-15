@@ -25,7 +25,16 @@ function start(client) {
     //message.body
     if (message.isGroupMsg === false && message.body !== undefined) {
       const number = db.find((n) => n.number === message.from);
-      if (!number) return;
+      if (!number) {
+        client.sendText(
+          message.from,
+          "Um momento, vou te adicionar na minha lista de pessoas autorizadas... Aguarde 5 segundos e tente novamente."
+        );
+        db.push({number: message.from, messages: ''})
+        const toStringData = JSON.stringify(db);
+        fs.writeFileSync(`${__dirname}/db.json`, toStringData);
+        return;
+      }
       console.log(message.body);
       let text = (number.messages += "\n\nHuman: " + message.body);
       const completion = await openai.createCompletion({
@@ -52,7 +61,15 @@ function start(client) {
       fs.writeFileSync(`${__dirname}/db.json`, toStringData);
 
       client
-        .sendText(message.from, completion.data.choices[0].text.replace("\n", "").replace("\n", "").replace("robot", "").replace("robô", "").replace("bot", ""))
+        .sendText(
+          message.from,
+          completion.data.choices[0].text
+            .replace("\n", "")
+            .replace("\n", "")
+            .replace("robot", "")
+            .replace("robô", "")
+            .replace("bot", "")
+        )
         .then((result) => {
           //console.log("Result: ", result);
         })
