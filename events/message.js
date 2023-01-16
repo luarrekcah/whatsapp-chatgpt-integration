@@ -13,14 +13,15 @@ const autorizedGroups = [/*"553198585952-1571260307@g.us"*/];
 
 module.exports.run = async (client, message) => {
   if (message.body !== undefined) {
-    if (message.isGroupMsg && !autorizedGroups.includes(message.from)) return;
+    if (message.isGroupMsg /*&& !autorizedGroups.includes(message.from)*/) return;
     if (
       message.type === "ptt" ||
       message.type === "video" ||
       message.type === "image"
     )
       return;
-    if (message.body.length > 1000 || message.body.length <= 5) return;
+    if (message.body.length > 1000 || message.body.length <= 2) return;
+    if(message.from === 'status@broadcast') return;
     const number = db.find((n) => n.number === message.from);
     if (!number) {
       client.sendText(
@@ -68,6 +69,7 @@ module.exports.run = async (client, message) => {
             .replace("Robot:", "")
             .replace("Robô:", "")
             .replace("Bot:", "")
+            .replace("Computer:", "")
         )
         .then((result) => {
           //console.log("Result: ", result);
