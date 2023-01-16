@@ -9,7 +9,7 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-const autorizedGroups = ["553198585952-1571260307@g.us"];
+const autorizedGroups = [/*"553198585952-1571260307@g.us"*/];
 
 module.exports.run = async (client, message) => {
   if (message.body !== undefined) {
@@ -34,9 +34,10 @@ module.exports.run = async (client, message) => {
     }
     console.log(message);
     let text = (number.messages += `\n\nHuman: ${message.quotedMsg ? message.quotedMsg.body : ''} ${message.body}`);
+
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: text,
+      prompt: text,//.substring(text.length - 4000),
       temperature: 0.9,
       max_tokens: 150,
       top_p: 1,
@@ -57,13 +58,13 @@ module.exports.run = async (client, message) => {
 
     fs.writeFileSync(`${__dirname}/../db.json`, toStringData);
 
+    console.log(completion.data.choices[0]);
+
     if (message.quotedMsg) {
       client
         .sendText(
           message.from,
-          completion.data.choices[0].text
-            .replace("\n", "")
-            .replace("\n", "")
+          completion.data.choices[0].text.trim()
             .replace("Robot:", "")
             .replace("Robô:", "")
             .replace("Bot:", "")
