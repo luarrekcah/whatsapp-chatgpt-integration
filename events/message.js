@@ -33,10 +33,10 @@ module.exports.run = async (client, message) => {
       return;
     }
     console.log(message);
-    let text = (number.messages += "\n\nHuman: " + message.body);
+    let text = (number.messages += `\n\nHuman: ${message.quotedMsg ? message.quotedMsg.body : ''} ${message.body}`);
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: `Human: ${message.quotedMsg ? message.quotedMsg.body : ''} ${message.body}`,
+      prompt: text,
       temperature: 0.9,
       max_tokens: 150,
       top_p: 1,
