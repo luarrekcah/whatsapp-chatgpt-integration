@@ -51,7 +51,7 @@ module.exports.run = async (client, message) => {
   
         const toStringData = JSON.stringify(updateJson);
   
-        fs.writeFileSync(`${__dirname}/db.json`, toStringData);
+        fs.writeFileSync(`${__dirname}/../db.json`, toStringData);
   
         client
           .reply(
