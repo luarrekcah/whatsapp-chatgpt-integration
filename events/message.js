@@ -9,10 +9,13 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-module.exports.run = async message => {
+const autorizedGroups = ['553198585952-1571260307@g.us'];
+
+module.exports.run = async (client, message) => {
     console.log(message);
-    if (message.isGroupMsg === false && message.body !== undefined) {
-        if(message.type !== 'chat') return;
+    if (message.body !== undefined) {
+        if(message.isGroupMsg && !autorizedGroups.includes(message.from)) return;
+        if(message.type === 'ptt' || message.type === 'video' || message.type === 'image') return
         if(message.body.length > 1000 || message.body.length <= 5) return;
         const number = db.find((n) => n.number === message.from);
         if (!number) {

@@ -15,6 +15,6 @@ venom
 
 const start = (client) => {
   client.onMessage(async (message) => {
-    return messageHandler.run(message);
+    return messageHandler.run(client, message);
   });
 };
